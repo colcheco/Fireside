@@ -4,6 +4,9 @@
   "package": "io.github.colcheco.fireside.mixin",
   "compatibilityLevel": "JAVA_25",
   "mixins": [
+    "BlockBehaviourMixin",
+    "ServerLevelMixin",
+    "ServerPlayerMixin"
   ],
   "client": [
   ],

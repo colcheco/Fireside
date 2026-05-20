@@ -12,10 +12,10 @@
   "environment": "*",
   "entrypoints": {
     "fabric-datagen": [
-      "io.github.colcheco.fireside.FiresideDataGenerator"
+      "io.github.colcheco.fireside.client.FiresideDataGenerator"
     ],
     "client": [
-      "io.github.colcheco.fireside.FiresideClient"
+      "io.github.colcheco.fireside.client.FiresideClient"
     ],
     "main": [
       "io.github.colcheco.fireside.Fireside"
@@ -24,6 +24,7 @@
   "mixins": [
     "fireside.mixins.json"
   ],
+  "accessWidener": "fireside.classtweaker",
   "depends": {
     "fabricloader": ">=0.19.2",
     "fabric-api": "*",

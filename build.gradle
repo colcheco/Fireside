@@ -9,6 +9,9 @@ base {
     archivesName = project.archives_base_name
 }
 
+loom {
+    accessWidenerPath = file("src/main/resources/fireside.classtweaker")
+}
 
 fabricApi {
     configureDataGeneration {

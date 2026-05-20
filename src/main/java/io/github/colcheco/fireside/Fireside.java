@@ -1,5 +1,6 @@
 package io.github.colcheco.fireside;
 
+import io.github.colcheco.fireside.entity.LogEntity;
 import net.fabricmc.api.ModInitializer;
 import org.jspecify.annotations.NullMarked;
 import org.slf4j.Logger;
@@ -13,5 +14,6 @@ public class Fireside implements ModInitializer {
     @Override
     public void onInitialize() {
         LOGGER.info("Initializing " + MOD_ID);
+        LogEntity.registerType();
     }
 }
