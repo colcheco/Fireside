@@ -5,6 +5,7 @@ import io.github.colcheco.fireside.Fireside;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import org.jspecify.annotations.NullMarked;
 
@@ -15,5 +16,7 @@ public class FiresideClient implements ClientModInitializer {
     public void onInitializeClient() {
         Fireside.LOGGER.info("Initializing client for " + Fireside.MOD_ID);
         EntityRenderers.register(LogEntity.TYPE, LogEntityRenderer::new);
+        KeyMappingHelper.registerKeyMapping(ModKeyMappings.SELECT);
+        KeyMappingHelper.registerKeyMapping(ModKeyMappings.SUBMIT);
     }
 }

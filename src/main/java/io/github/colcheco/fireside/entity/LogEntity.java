@@ -1,13 +1,12 @@
 package io.github.colcheco.fireside.entity;
 
 import io.github.colcheco.fireside.Fireside;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -19,18 +18,27 @@ import org.jspecify.annotations.NullMarked;
 
 @NullMarked
 public class LogEntity extends Entity {
-    private static final Identifier ID = Identifier.fromNamespaceAndPath(Fireside.MOD_ID, "log");
-    public static final EntityType<LogEntity> TYPE = Registry.register(BuiltInRegistries.ENTITY_TYPE, ID,
-            EntityType.Builder.of(LogEntity::new, MobCategory.MISC).noLootTable().sized(1F, 1F)
-                    .build(ResourceKey.create(Registries.ENTITY_TYPE, ID)));
+    public static final ResourceKey<EntityType<?>> KEY = ResourceKey.create(Registries.ENTITY_TYPE,
+            Identifier.fromNamespaceAndPath(Fireside.MOD_ID, "log"));
+    public static final EntityType<LogEntity> TYPE = EntityType.Builder.of(LogEntity::new, MobCategory.MISC)
+            .noLootTable().sized(1F, 1F).build(KEY);
 
     public LogEntity(EntityType<?> type, Level level) {
         super(type, level);
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder entityData) {
+    public void tick() {
+        super.tick();
+        if (level() instanceof ServerLevel level) {
+            if (!level.getBlockState(getOnPos().above()).is(BlockTags.LOGS)) {
+                kill(level);
+            }
+        }
+    }
 
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder entityData) {
     }
 
     @Override
@@ -40,12 +48,10 @@ public class LogEntity extends Entity {
 
     @Override
     protected void readAdditionalSaveData(ValueInput input) {
-
     }
 
     @Override
     protected void addAdditionalSaveData(ValueOutput output) {
-
     }
 
     @Override
@@ -57,8 +63,5 @@ public class LogEntity extends Entity {
         if (level() instanceof ServerLevel level) {
             kill(level);
         }
-    }
-
-    public static void registerType() {
     }
 }

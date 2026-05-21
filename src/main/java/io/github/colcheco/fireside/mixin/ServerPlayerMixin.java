@@ -2,7 +2,6 @@ package io.github.colcheco.fireside.mixin;
 
 import com.mojang.authlib.GameProfile;
 import io.github.colcheco.fireside.entity.Sleeper;
-import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -26,18 +25,20 @@ public abstract class ServerPlayerMixin extends Player {
     private Sleeper.WakeUpTime wakeUpTime = Sleeper.WakeUpTime.NOT_SLEEPING;
     @Unique
     public Sleeper.WakeUpTime fireside$sleepingUntil() {
-        return wakeUpTime;
+        return this.wakeUpTime;
     }
     @Unique
     public void fireside$setSleeping(Sleeper.WakeUpTime time) {
-        wakeUpTime = time;
+        this.wakeUpTime = time;
     }
-    @Inject(method = "startSleeping", at = @At("HEAD"))
-    public void onStartSleeping(BlockPos bedPosition, CallbackInfo ci) {
-        wakeUpTime = Sleeper.WakeUpTime.MORNING;
+    @Inject(method = "tick", at = @At("HEAD"))
+    public void onTick(CallbackInfo ci) {
+        if (this.isSleepingLongEnough()) {
+            this.wakeUpTime = Sleeper.WakeUpTime.MORNING;
+        }
     }
     @Inject(method = "stopSleepInBed", at = @At("HEAD"))
     public void onStopSleepInBed(boolean forcefulWakeUp, boolean updateLevelList, CallbackInfo ci) {
-        wakeUpTime = Sleeper.WakeUpTime.NOT_SLEEPING;
+        this.wakeUpTime = Sleeper.WakeUpTime.NOT_SLEEPING;
     }
 }
