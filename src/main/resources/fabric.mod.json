@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "fireside",
-  "version": "1.0.0+26.1.2",
+  "version": "1.0.1+26.1.2",
   "name": "Fireside",
   "description": "Helps you skip time",
   "authors": [
@@ -9,11 +9,9 @@
   ],
   "contact": {},
   "license": "All-Rights-Reserved",
+  "icon": "assets/fireside/icon.png",
   "environment": "*",
   "entrypoints": {
-    "fabric-datagen": [
-      "io.github.colcheco.fireside.client.FiresideDataGenerator"
-    ],
     "client": [
       "io.github.colcheco.fireside.client.FiresideClient"
     ],
