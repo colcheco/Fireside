@@ -1,6 +1,7 @@
 package io.github.colcheco.fireside.mixin;
 
 import com.mojang.authlib.GameProfile;
+import io.github.colcheco.fireside.entity.LogEntity;
 import io.github.colcheco.fireside.entity.Sleeper;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -35,10 +36,10 @@ public abstract class ServerPlayerMixin extends Player {
     public void onTick(CallbackInfo ci) {
         if (this.isSleepingLongEnough()) {
             this.wakeUpTime = Sleeper.WakeUpTime.MORNING;
+        } else if (this.wakeUpTime != Sleeper.WakeUpTime.NOT_SLEEPING) {
+            if (!(this.getVehicle() instanceof LogEntity log && log.campfire())) {
+                this.wakeUpTime = Sleeper.WakeUpTime.NOT_SLEEPING;
+            }
         }
-    }
-    @Inject(method = "stopSleepInBed", at = @At("HEAD"))
-    public void onStopSleepInBed(boolean forcefulWakeUp, boolean updateLevelList, CallbackInfo ci) {
-        this.wakeUpTime = Sleeper.WakeUpTime.NOT_SLEEPING;
     }
 }

@@ -1,5 +1,6 @@
 package io.github.colcheco.fireside.mixin;
 
+import io.github.colcheco.fireside.Fireside;
 import io.github.colcheco.fireside.entity.Sleeper;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
@@ -79,8 +80,14 @@ public abstract class ServerLevelMixin extends Level {
                 }
                 ResourceKey<ClockTimeMarker> marker = target.getMarker();
                 if (marker != null) {
+                    for (ServerPlayer sp : players) {
+                        Sleeper sleeper = (Sleeper) sp;
+                        if (sleeper.sleepingUntil() == target) {
+                            sleeper.setSleeping(Sleeper.WakeUpTime.NOT_SLEEPING);
+                        }
+                    }
                     manager.moveToTimeMarker(holder, marker);
-
+                    Fireside.LOGGER.info("Skipped time {}", ("to " + target).toLowerCase());
                 }
             }
         }

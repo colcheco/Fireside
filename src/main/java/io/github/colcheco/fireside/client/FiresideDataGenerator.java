@@ -11,6 +11,5 @@ import org.jspecify.annotations.NullMarked;
 public class FiresideDataGenerator implements DataGeneratorEntrypoint {
     @Override
     public void onInitializeDataGenerator(FabricDataGenerator fabricDataGenerator) {
-        FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
     }
 }

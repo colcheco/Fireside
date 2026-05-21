@@ -12,11 +12,11 @@ public interface Sleeper {
     void setSleeping(WakeUpTime time);
 
     enum WakeUpTime {
+        NOT_SLEEPING(ClockTimeMarkers.DAY),
+        MIDNIGHT(ClockTimeMarkers.MIDNIGHT),
         MORNING(ClockTimeMarkers.WAKE_UP_FROM_SLEEP),
         NOON(ClockTimeMarkers.NOON),
-        NIGHT(ClockTimeMarkers.NIGHT),
-        MIDNIGHT(ClockTimeMarkers.MIDNIGHT),
-        NOT_SLEEPING(ClockTimeMarkers.DAY);
+        NIGHT(ClockTimeMarkers.NIGHT);
 
         private final ResourceKey<ClockTimeMarker> marker;
 

@@ -1,6 +1,7 @@
 package io.github.colcheco.fireside.entity;
 
 import io.github.colcheco.fireside.Fireside;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.Identifier;
@@ -12,6 +13,9 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.CampfireBlock;
+import net.minecraft.world.level.block.EnchantingTableBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jspecify.annotations.NullMarked;
@@ -25,6 +29,16 @@ public class LogEntity extends Entity {
 
     public LogEntity(EntityType<?> type, Level level) {
         super(type, level);
+    }
+
+    public boolean campfire() {
+        for (BlockPos offset : EnchantingTableBlock.BOOKSHELF_OFFSETS) {
+            BlockState block = level().getBlockState(getOnPos().above().offset(offset));
+            if (block.is(BlockTags.CAMPFIRES) && block.getValue(CampfireBlock.LIT)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -56,9 +70,6 @@ public class LogEntity extends Entity {
 
     @Override
     protected void removePassenger(Entity passenger) {
-        if (passenger instanceof Sleeper sleeper) {
-            sleeper.setSleeping(Sleeper.WakeUpTime.NOT_SLEEPING);
-        }
         super.removePassenger(passenger);
         if (level() instanceof ServerLevel level) {
             kill(level);
