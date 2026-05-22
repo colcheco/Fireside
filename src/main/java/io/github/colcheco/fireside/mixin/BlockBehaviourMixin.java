@@ -14,6 +14,7 @@ import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CampfireBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -71,6 +72,7 @@ public abstract class BlockBehaviourMixin {
             final CallbackInfo ci
     ) {
         if (state.is(BlockTags.CAMPFIRES)
+                && !state.is(Blocks.SOUL_CAMPFIRE)
                 && !state.getValueOrElse(CampfireBlock.SIGNAL_FIRE, true)
                 && state.getValueOrElse(CampfireBlock.LIT, false)
                 && level.isRainingAt(pos.above())

@@ -1,6 +1,7 @@
 package io.github.colcheco.fireside.mixin;
 
 import io.github.colcheco.fireside.Fireside;
+import io.github.colcheco.fireside.entity.LogEntity;
 import io.github.colcheco.fireside.entity.Sleeper;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
@@ -23,6 +24,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
@@ -65,11 +67,19 @@ public abstract class ServerLevelMixin extends Level {
                 ServerClockManager manager = level.clockManager();
                 Sleeper.WakeUpTime target = Sleeper.WakeUpTime.NOT_SLEEPING;
                 long timeToSoonest = Long.MAX_VALUE;
+                int weatherHaters = 0;
                 for (ServerPlayer sleeper : players) {
                     Sleeper.WakeUpTime sleeperTarget = ((Sleeper) sleeper).sleepingUntil();
                     if (sleeperTarget == Sleeper.WakeUpTime.NOT_SLEEPING) {
                         target = sleeperTarget;
                         break;
+                    }
+                    if (sleeperTarget == Sleeper.WakeUpTime.CLEAR_WEATHER) {
+                        weatherHaters++;
+                        continue;
+                    }
+                    if (sleeper.isSleepingLongEnough()) {
+                        weatherHaters++;
                     }
                     long distance = manager.getInstance(holder).timeMarkers.get(sleeperTarget.getMarker())
                             .resolveTimeToMoveTo(manager.getTotalTicks(holder));
@@ -78,16 +88,33 @@ public abstract class ServerLevelMixin extends Level {
                         timeToSoonest = distance;
                     }
                 }
+                if (weatherHaters == players.size() && rules.get(GameRules.ADVANCE_WEATHER) && level.isRaining()) {
+                    target = Sleeper.WakeUpTime.CLEAR_WEATHER;
+                }
                 ResourceKey<ClockTimeMarker> marker = target.getMarker();
                 if (marker != null) {
-                    for (ServerPlayer sp : players) {
-                        Sleeper sleeper = (Sleeper) sp;
-                        if (sleeper.sleepingUntil() == target) {
-                            sleeper.setSleeping(Sleeper.WakeUpTime.NOT_SLEEPING);
+                    Collections.shuffle(players);
+                    for (ServerPlayer serverPlayer : players) {
+                        Sleeper sleeper = (Sleeper) serverPlayer;
+                        if (serverPlayer.getVehicle() instanceof LogEntity log) {
+                            log.tickCampfires();
+                            if (!log.campfire()) {
+                                sleeper.setSleeping(Sleeper.WakeUpTime.NOT_SLEEPING);
+                                return;
+                            }
                         }
                     }
+                    for (ServerPlayer sp : players) {
+                        Sleeper sleeper = (Sleeper) sp;
+                        if (sleeper.sleepingUntil() == target && sp.getVehicle() instanceof LogEntity log) {
+                            log.kill(level);
+                        }
+                    }
+                    if (target == Sleeper.WakeUpTime.CLEAR_WEATHER) {
+                        level.resetWeatherCycle();
+                    }
                     manager.moveToTimeMarker(holder, marker);
-                    Fireside.LOGGER.info("Skipped time {}", ("to " + target).toLowerCase());
+                    Fireside.LOGGER.info("Skipped time to {}", target);
                 }
             }
         }

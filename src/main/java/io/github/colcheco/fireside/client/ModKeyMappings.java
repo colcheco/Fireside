@@ -25,7 +25,7 @@ public class ModKeyMappings {
     public static void press(KeyMapping keyMapping, Minecraft client) {
         if (client.player != null) {
             if (keyMapping.equals(ModKeyMappings.SELECT)) {
-                if (++selection > 4) {
+                if (++selection > 5) {
                     selection = 0;
                 }
                 client.player.sendOverlayMessage(getMessage());
@@ -47,6 +47,7 @@ public class ModKeyMappings {
                 case 2 -> "morning";
                 case 3 -> "noon";
                 case 4 -> "night";
+                case 5 -> "clear weather";
                 default -> "invalid";
             };
         }

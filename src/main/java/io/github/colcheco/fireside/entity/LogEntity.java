@@ -51,6 +51,18 @@ public class LogEntity extends Entity {
         }
     }
 
+    public void tickCampfires() {
+        if (level() instanceof ServerLevel level) {
+            for (BlockPos offset : EnchantingTableBlock.BOOKSHELF_OFFSETS) {
+                BlockPos next = getOnPos().above().offset(offset);
+                BlockState block = level.getBlockState(next);
+                if (block.is(BlockTags.CAMPFIRES)) {
+                    block.randomTick(level, next, level.getRandom());
+                }
+            }
+        }
+    }
+
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder entityData) {
     }
