@@ -1,7 +1,6 @@
-package io.github.colcheco.fireside.client;
+package io.github.colcheco.fireside.keybind;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import io.github.colcheco.fireside.networking.FiresidePayloadC2S;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;

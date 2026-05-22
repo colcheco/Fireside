@@ -1,4 +1,4 @@
-package io.github.colcheco.fireside.networking;
+package io.github.colcheco.fireside.keybind;
 
 import io.github.colcheco.fireside.Fireside;
 import io.github.colcheco.fireside.entity.LogEntity;

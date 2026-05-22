@@ -1,7 +1,7 @@
 package io.github.colcheco.fireside;
 
 import io.github.colcheco.fireside.entity.LogEntity;
-import io.github.colcheco.fireside.networking.FiresidePayloadC2S;
+import io.github.colcheco.fireside.keybind.FiresidePayloadC2S;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 public class Fireside implements ModInitializer {
     public static final String MOD_ID = "fireside";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-    public static boolean initialized = false;
 
     @Override
     public void onInitialize() {
@@ -23,6 +22,5 @@ public class Fireside implements ModInitializer {
         Registry.register(BuiltInRegistries.ENTITY_TYPE, LogEntity.KEY, LogEntity.TYPE);
         PayloadTypeRegistry.serverboundPlay().register(FiresidePayloadC2S.TYPE, FiresidePayloadC2S.STREAM_CODEC);
         ServerPlayNetworking.registerGlobalReceiver(FiresidePayloadC2S.TYPE, FiresidePayloadC2S::handle);
-        initialized = true;
     }
 }

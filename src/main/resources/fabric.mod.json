@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "fireside",
-  "version": "1.1.1+26.1.2",
+  "version": "1.1.2+26.1.2",
   "name": "Fireside",
   "description": "Helps you skip time",
   "authors": [
@@ -13,7 +13,7 @@
   "environment": "*",
   "entrypoints": {
     "client": [
-      "io.github.colcheco.fireside.client.FiresideClient"
+      "io.github.colcheco.fireside.FiresideClient"
     ],
     "main": [
       "io.github.colcheco.fireside.Fireside"

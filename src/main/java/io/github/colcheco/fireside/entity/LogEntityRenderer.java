@@ -1,6 +1,5 @@
-package io.github.colcheco.fireside.client;
+package io.github.colcheco.fireside.entity;
 
-import io.github.colcheco.fireside.entity.LogEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.culling.Frustum;
@@ -12,7 +11,7 @@ import org.jspecify.annotations.NullMarked;
 @NullMarked
 @Environment(EnvType.CLIENT)
 public class LogEntityRenderer extends EntityRenderer<LogEntity, EntityRenderState> {
-    protected LogEntityRenderer(EntityRendererProvider.Context context) {
+    public LogEntityRenderer(EntityRendererProvider.Context context) {
         super(context);
     }
     @Override

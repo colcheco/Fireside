@@ -1,7 +1,8 @@
-package io.github.colcheco.fireside.client;
+package io.github.colcheco.fireside;
 
 import io.github.colcheco.fireside.entity.LogEntity;
-import io.github.colcheco.fireside.Fireside;
+import io.github.colcheco.fireside.entity.LogEntityRenderer;
+import io.github.colcheco.fireside.keybind.ModKeyMappings;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
