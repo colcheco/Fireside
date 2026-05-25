@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @NullMarked
 public class EndLevelTickListener implements ServerTickEvents.EndLevelTick {
-    private static final Map<ServerLevel, Boolean> weatherStatus = new ConcurrentHashMap<>();
+    private static final Map<ServerLevel, Boolean> processing = new ConcurrentHashMap<>();
 
     @Override
     public void onEndTick(ServerLevel level) {
@@ -49,6 +49,7 @@ public class EndLevelTickListener implements ServerTickEvents.EndLevelTick {
                         }
                         if (sleeper.isSleepingLongEnough()) {
                             weatherHaters++;
+                            sleeperTarget = Sleeper.WakeUpTime.MORNING;
                         }
                         long distance = manager.getInstance(holder).timeMarkers.get(sleeperTarget.getMarker())
                                 .resolveTimeToMoveTo(manager.getTotalTicks(holder));
@@ -58,16 +59,17 @@ public class EndLevelTickListener implements ServerTickEvents.EndLevelTick {
                         }
                     }
                     if (weatherHaters == players.size() && rules.get(GameRules.ADVANCE_WEATHER) && level.isRaining()) {
-                        if (weatherStatus.getOrDefault(level, false)) {
-                            target = Sleeper.WakeUpTime.NOT_SLEEPING;
-                        } else {
-                            target = Sleeper.WakeUpTime.CLEAR_WEATHER;
-                        }
-                    } else {
-                        weatherStatus.put(level, false);
+                        target = Sleeper.WakeUpTime.CLEAR_WEATHER;
+                    }
+                    if (target.equals(Sleeper.WakeUpTime.NOT_SLEEPING)) {
+                        processing.put(level, false);
+                    }
+                    if (processing.getOrDefault(level, false)) {
+                        target = Sleeper.WakeUpTime.NOT_SLEEPING;
                     }
                     ResourceKey<ClockTimeMarker> marker = target.getMarker();
                     if (marker != null) {
+                        processing.put(level, true);
                         Collections.shuffle(players);
                         for (ServerPlayer sleeper : players) {
                             if (sleeper.getVehicle() instanceof LogEntity log) {
@@ -80,7 +82,6 @@ public class EndLevelTickListener implements ServerTickEvents.EndLevelTick {
                         }
                         if (target.equals(Sleeper.WakeUpTime.CLEAR_WEATHER)) {
                             level.resetWeatherCycle();
-                            weatherStatus.put(level, true);
                         } else {
                             for (ServerPlayer sleeper : players) {
                                 if (((Sleeper) sleeper).sleepingUntil().equals(target)

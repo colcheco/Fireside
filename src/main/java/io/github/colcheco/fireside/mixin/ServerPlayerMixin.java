@@ -43,12 +43,10 @@ public abstract class ServerPlayerMixin extends Player {
         this.wakeUpTime = time;
     }
 
-    @Inject(method = "tick", at = @At("HEAD"))
+    @Inject(method = "tick", at = @At("TAIL"))
     public void onTick(CallbackInfo ci) {
         ResourceKey<ClockTimeMarker> marker = this.wakeUpTime.getMarker();
-        if (this.isSleepingLongEnough()) {
-            this.wakeUpTime = Sleeper.WakeUpTime.MORNING;
-        } else if (marker != null) {
+        if (marker != null) {
             if (!(this.getVehicle() instanceof LogEntity log && log.campfire())) {
                 this.wakeUpTime = Sleeper.WakeUpTime.NOT_SLEEPING;
             } else if (this.level() instanceof ServerLevel level) {
