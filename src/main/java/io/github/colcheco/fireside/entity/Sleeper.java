@@ -26,7 +26,7 @@ public interface Sleeper {
         }
 
         public @Nullable ResourceKey<ClockTimeMarker> getMarker() {
-            return marker == ClockTimeMarkers.ROLL_VILLAGE_SIEGE ? null : marker;
+            return marker.equals(ClockTimeMarkers.ROLL_VILLAGE_SIEGE) ? null : marker;
         }
     }
 }

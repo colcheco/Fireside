@@ -16,7 +16,6 @@ import org.jspecify.annotations.NullMarked;
 public record FiresidePayloadC2S(byte data) implements CustomPacketPayload {
     public static final Type<FiresidePayloadC2S> TYPE =
             new Type<>(Identifier.fromNamespaceAndPath(Fireside.MOD_ID, "payload"));
-
     public static final StreamCodec<RegistryFriendlyByteBuf, FiresidePayloadC2S> STREAM_CODEC =
             StreamCodec.composite(ByteBufCodecs.BYTE, FiresidePayloadC2S::data, FiresidePayloadC2S::new);
 
@@ -43,12 +42,12 @@ public record FiresidePayloadC2S(byte data) implements CustomPacketPayload {
             default -> Sleeper.WakeUpTime.NOT_SLEEPING;
         };
         sleeper.setSleeping(target);
-        if (target == Sleeper.WakeUpTime.NOT_SLEEPING) {
+        if (target.equals(Sleeper.WakeUpTime.NOT_SLEEPING)) {
             return Component.literal("Please make a selection and try again");
         }
-        if (target == Sleeper.WakeUpTime.CLEAR_WEATHER) {
+        if (target.equals(Sleeper.WakeUpTime.CLEAR_WEATHER)) {
             return Component.literal("Waiting by the fire until the weather is clear");
         }
-        return Component.literal("Waiting by the fire " + ("until " + target).toLowerCase());
+        return Component.literal("Waiting by the fire until " + target.toString().toLowerCase());
     }
 }

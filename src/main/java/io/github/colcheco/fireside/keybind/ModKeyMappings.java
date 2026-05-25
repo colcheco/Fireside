@@ -16,20 +16,16 @@ public class ModKeyMappings {
     public static final KeyMapping SUBMIT = register("submit", GLFW.GLFW_KEY_ENTER);
     public static final KeyMapping SELECT = register("select", GLFW.GLFW_KEY_BACKSLASH);
     private static byte selection;
-    private static KeyMapping register(String name, int key) {
-        return new KeyMapping("key.fireside." + name,
-                InputConstants.Type.KEYSYM, key, KeyMapping.Category.GAMEPLAY);
-    }
 
     public static void press(KeyMapping keyMapping, Minecraft client) {
         if (client.player != null) {
-            if (keyMapping.equals(ModKeyMappings.SELECT)) {
+            if (keyMapping.equals(SELECT)) {
                 if (++selection > 5) {
                     selection = 0;
                 }
                 client.player.sendOverlayMessage(getMessage());
             }
-            if (keyMapping.equals(ModKeyMappings.SUBMIT)) {
+            if (keyMapping.equals(SUBMIT)) {
                 ClientPlayNetworking.send(new FiresidePayloadC2S(selection));
             }
         }
@@ -40,8 +36,7 @@ public class ModKeyMappings {
         if (selection == 0) {
             message = "Cleared selection";
         } else {
-            message = "Selected campfire wake up time: ";
-            message = message + switch (selection) {
+            message = "Selected campfire wake up time: " + switch (selection) {
                 case 1 -> "midnight";
                 case 2 -> "morning";
                 case 3 -> "noon";
@@ -51,5 +46,10 @@ public class ModKeyMappings {
             };
         }
         return Component.literal(message);
+    }
+
+    private static KeyMapping register(String name, int key) {
+        return new KeyMapping("key.fireside." + name,
+                InputConstants.Type.KEYSYM, key, KeyMapping.Category.GAMEPLAY);
     }
 }

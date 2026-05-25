@@ -1,4 +1,5 @@
 classTweaker v1 official
 
+accessible field net/minecraft/server/level/ServerLevel sleepStatus Lnet/minecraft/server/players/SleepStatus;
 accessible field net/minecraft/world/clock/ServerClockManager$ClockInstance timeMarkers Ljava/util/Map;
 accessible method net/minecraft/world/clock/ServerClockManager getInstance (Lnet/minecraft/core/Holder;)Lnet/minecraft/world/clock/ServerClockManager$ClockInstance;

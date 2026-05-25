@@ -26,19 +26,23 @@ import java.util.Optional;
 @Mixin(ServerPlayer.class)
 @Implements(@Interface(iface = Sleeper.class, prefix = "fireside$"))
 public abstract class ServerPlayerMixin extends Player {
-    public ServerPlayerMixin(Level level, GameProfile gameProfile) {
-        super(level, gameProfile);
-    }
     @Unique
     private Sleeper.WakeUpTime wakeUpTime = Sleeper.WakeUpTime.NOT_SLEEPING;
+
+    protected ServerPlayerMixin(Level level, GameProfile gameProfile) {
+        super(level, gameProfile);
+    }
+
     @Unique
     public Sleeper.WakeUpTime fireside$sleepingUntil() {
         return this.wakeUpTime;
     }
+
     @Unique
     public void fireside$setSleeping(Sleeper.WakeUpTime time) {
         this.wakeUpTime = time;
     }
+
     @Inject(method = "tick", at = @At("HEAD"))
     public void onTick(CallbackInfo ci) {
         ResourceKey<ClockTimeMarker> marker = this.wakeUpTime.getMarker();
@@ -48,7 +52,7 @@ public abstract class ServerPlayerMixin extends Player {
             if (!(this.getVehicle() instanceof LogEntity log && log.campfire())) {
                 this.wakeUpTime = Sleeper.WakeUpTime.NOT_SLEEPING;
             } else if (this.level() instanceof ServerLevel level) {
-                if (this.wakeUpTime == Sleeper.WakeUpTime.CLEAR_WEATHER && !level.isRaining()) {
+                if (this.wakeUpTime.equals(Sleeper.WakeUpTime.CLEAR_WEATHER) && !level.isRaining()) {
                     log.kill(level);
                 } else {
                     Optional<Holder<WorldClock>> clock = level.dimensionType().defaultClock();

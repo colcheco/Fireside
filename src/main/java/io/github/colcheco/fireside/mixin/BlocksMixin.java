@@ -21,6 +21,7 @@ public abstract class BlocksMixin {
     @Unique
     private static final String MIXIN_PATH = "register(Ljava/lang/String;Ljava/util/function/Function;Lnet/minecraft/"
             + "world/level/block/state/BlockBehaviour$Properties;)Lnet/minecraft/world/level/block/Block;";
+
     @Inject(method = MIXIN_PATH, at = @At("HEAD"), cancellable = true)
     private static void OnRegister(
             final String id,

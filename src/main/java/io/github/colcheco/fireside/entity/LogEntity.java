@@ -31,16 +31,6 @@ public class LogEntity extends Entity {
         super(type, level);
     }
 
-    public boolean campfire() {
-        for (BlockPos offset : EnchantingTableBlock.BOOKSHELF_OFFSETS) {
-            BlockState block = level().getBlockState(getOnPos().above().offset(offset));
-            if (block.is(BlockTags.CAMPFIRES) && block.getValueOrElse(CampfireBlock.LIT, false)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     @Override
     public void tick() {
         super.tick();
@@ -49,6 +39,21 @@ public class LogEntity extends Entity {
                 kill(level);
             }
         }
+    }
+
+    @Override
+    public boolean hurtServer(ServerLevel level, DamageSource source, float damage) {
+        return false;
+    }
+
+    public boolean campfire() {
+        for (BlockPos offset : EnchantingTableBlock.BOOKSHELF_OFFSETS) {
+            BlockState block = level().getBlockState(getOnPos().above().offset(offset));
+            if (block.is(BlockTags.CAMPFIRES) && block.getValueOrElse(CampfireBlock.LIT, false)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void tickCampfires() {
@@ -64,12 +69,15 @@ public class LogEntity extends Entity {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder entityData) {
+    protected void removePassenger(Entity passenger) {
+        super.removePassenger(passenger);
+        if (level() instanceof ServerLevel level) {
+            kill(level);
+        }
     }
 
     @Override
-    public boolean hurtServer(ServerLevel level, DamageSource source, float damage) {
-        return false;
+    protected void defineSynchedData(SynchedEntityData.Builder entityData) {
     }
 
     @Override
@@ -78,13 +86,5 @@ public class LogEntity extends Entity {
 
     @Override
     protected void addAdditionalSaveData(ValueOutput output) {
-    }
-
-    @Override
-    protected void removePassenger(Entity passenger) {
-        super.removePassenger(passenger);
-        if (level() instanceof ServerLevel level) {
-            kill(level);
-        }
     }
 }

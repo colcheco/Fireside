@@ -1,8 +1,12 @@
 package io.github.colcheco.fireside;
 
 import io.github.colcheco.fireside.entity.LogEntity;
+import io.github.colcheco.fireside.event.EndLevelTickListener;
+import io.github.colcheco.fireside.event.UseItemOnListener;
 import io.github.colcheco.fireside.keybind.FiresidePayloadC2S;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.event.player.BlockEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.Registry;
@@ -22,5 +26,7 @@ public class Fireside implements ModInitializer {
         Registry.register(BuiltInRegistries.ENTITY_TYPE, LogEntity.KEY, LogEntity.TYPE);
         PayloadTypeRegistry.serverboundPlay().register(FiresidePayloadC2S.TYPE, FiresidePayloadC2S.STREAM_CODEC);
         ServerPlayNetworking.registerGlobalReceiver(FiresidePayloadC2S.TYPE, FiresidePayloadC2S::handle);
+        BlockEvents.USE_ITEM_ON.register(new UseItemOnListener());
+        ServerTickEvents.END_LEVEL_TICK.register(new EndLevelTickListener());
     }
 }

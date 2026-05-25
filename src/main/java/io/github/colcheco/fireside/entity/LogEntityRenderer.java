@@ -14,10 +14,12 @@ public class LogEntityRenderer extends EntityRenderer<LogEntity, EntityRenderSta
     public LogEntityRenderer(EntityRendererProvider.Context context) {
         super(context);
     }
+
     @Override
     public boolean shouldRender(LogEntity entity, Frustum culler, double x, double y, double z) {
         return true;
     }
+
     @Override
     public EntityRenderState createRenderState() {
         return new EntityRenderState();
