@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @NullMarked
 public class EndLevelTickListener implements ServerTickEvents.EndLevelTick {
-    private static final Map<ServerLevel, Boolean> processing = new ConcurrentHashMap<>();
+    private static final Map<ServerLevel, Sleeper.WakeUpTime> process = new ConcurrentHashMap<>();
 
     @Override
     public void onEndTick(ServerLevel level) {
@@ -61,21 +61,18 @@ public class EndLevelTickListener implements ServerTickEvents.EndLevelTick {
                     if (weatherHaters == players.size() && rules.get(GameRules.ADVANCE_WEATHER) && level.isRaining()) {
                         target = Sleeper.WakeUpTime.CLEAR_WEATHER;
                     }
-                    if (target.equals(Sleeper.WakeUpTime.NOT_SLEEPING)) {
-                        processing.put(level, false);
-                    }
-                    if (processing.getOrDefault(level, false)) {
+                    if (process.getOrDefault(level, Sleeper.WakeUpTime.NOT_SLEEPING).equals(target)) {
                         target = Sleeper.WakeUpTime.NOT_SLEEPING;
+                    } else {
+                        process.put(level, target);
                     }
                     ResourceKey<ClockTimeMarker> marker = target.getMarker();
                     if (marker != null) {
-                        processing.put(level, true);
                         Collections.shuffle(players);
                         for (ServerPlayer sleeper : players) {
                             if (sleeper.getVehicle() instanceof LogEntity log) {
                                 log.tickCampfires();
                                 if (!log.campfire()) {
-                                    ((Sleeper) sleeper).setSleeping(Sleeper.WakeUpTime.NOT_SLEEPING);
                                     return;
                                 }
                             }
