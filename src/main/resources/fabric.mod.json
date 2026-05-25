@@ -8,7 +8,7 @@
     "Sam S."
   ],
   "contact": {},
-  "license": "All-Rights-Reserved",
+  "license": "MIT License",
   "icon": "assets/fireside/icon.png",
   "environment": "*",
   "entrypoints": {
