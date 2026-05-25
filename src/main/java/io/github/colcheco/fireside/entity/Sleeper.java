@@ -25,7 +25,8 @@ public interface Sleeper {
             marker = sleepingUntil;
         }
 
-        public @Nullable ResourceKey<ClockTimeMarker> getMarker() {
+        @Nullable
+        public ResourceKey<ClockTimeMarker> getMarker() {
             return marker.equals(ClockTimeMarkers.ROLL_VILLAGE_SIEGE) ? null : marker;
         }
     }
