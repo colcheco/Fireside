@@ -39,6 +39,10 @@ public class EndLevelTickListener implements ServerTickEvents.EndLevelTick {
                     int weatherHaters = 0;
                     for (ServerPlayer sleeper : players) {
                         Sleeper.WakeUpTime sleeperTarget = ((Sleeper) sleeper).sleepingUntil();
+                        if (sleeper.isSleepingLongEnough()) {
+                            weatherHaters++;
+                            sleeperTarget = Sleeper.WakeUpTime.MORNING;
+                        }
                         if (sleeperTarget.equals(Sleeper.WakeUpTime.NOT_SLEEPING)) {
                             target = sleeperTarget;
                             break;
@@ -46,10 +50,6 @@ public class EndLevelTickListener implements ServerTickEvents.EndLevelTick {
                         if (sleeperTarget.equals(Sleeper.WakeUpTime.CLEAR_WEATHER)) {
                             weatherHaters++;
                             continue;
-                        }
-                        if (sleeper.isSleepingLongEnough()) {
-                            weatherHaters++;
-                            sleeperTarget = Sleeper.WakeUpTime.MORNING;
                         }
                         long distance = manager.getInstance(holder).timeMarkers.get(sleeperTarget.getMarker())
                                 .resolveTimeToMoveTo(manager.getTotalTicks(holder));
