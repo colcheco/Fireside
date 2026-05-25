@@ -13,8 +13,8 @@ import org.lwjgl.glfw.GLFW;
 @NullMarked
 @Environment(EnvType.CLIENT)
 public class ModKeyMappings {
-    public static final KeyMapping SUBMIT = register("submit", GLFW.GLFW_KEY_ENTER);
     public static final KeyMapping SELECT = register("select", GLFW.GLFW_KEY_BACKSLASH);
+    public static final KeyMapping SUBMIT = register("submit", GLFW.GLFW_KEY_ENTER);
     private static byte selection;
 
     public static void press(KeyMapping keyMapping, Minecraft client) {
@@ -27,6 +27,7 @@ public class ModKeyMappings {
             }
             if (keyMapping.equals(SUBMIT)) {
                 ClientPlayNetworking.send(new FiresidePayloadC2S(selection));
+                selection = 0;
             }
         }
     }

@@ -34,22 +34,21 @@ public class UseItemOnListener implements BlockEvents.UseItemOnCallback {
     ) {
         if (blockState.is(BlockTags.LOGS) && itemStack.isEmpty()) {
             BlockPos above = blockPos.above();
-            if (!level.getBlockState(above).isAir() || !level.getBlockState(above.above()).isAir()) {
-                return null;
-            }
-            if (level instanceof ServerLevel serverLevel) {
-                LogEntity entity;
-                List<LogEntity> logs = level.getEntities(LogEntity.TYPE, new AABB(blockPos), _ -> true);
-                if (logs.isEmpty()) {
-                    entity = LogEntity.TYPE.spawn(serverLevel, blockPos, EntitySpawnReason.TRIGGERED);
-                } else {
-                    entity = logs.getFirst();
+            if (level.getBlockState(above).isAir() && level.getBlockState(above.above()).isAir()) {
+                if (level instanceof ServerLevel serverLevel) {
+                    LogEntity entity;
+                    List<LogEntity> logs = level.getEntities(LogEntity.TYPE, new AABB(blockPos), _ -> true);
+                    if (logs.isEmpty()) {
+                        entity = LogEntity.TYPE.spawn(serverLevel, blockPos, EntitySpawnReason.TRIGGERED);
+                    } else {
+                        entity = logs.getFirst();
+                    }
+                    if (entity != null && entity.getFirstPassenger() == null) {
+                        player.startRiding(entity);
+                    }
                 }
-                if (entity != null && entity.getFirstPassenger() == null) {
-                    player.startRiding(entity);
-                }
+                return InteractionResult.SUCCESS;
             }
-            return InteractionResult.SUCCESS;
         }
         return null;
     }
