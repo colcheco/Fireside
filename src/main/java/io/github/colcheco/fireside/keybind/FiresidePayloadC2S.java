@@ -10,6 +10,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerPlayer;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
@@ -25,10 +26,11 @@ public record FiresidePayloadC2S(byte data) implements CustomPacketPayload {
     }
 
     public static void handle(FiresidePayloadC2S payload, ServerPlayNetworking.Context context) {
-        if (context.player().getVehicle() instanceof LogEntity log && log.campfire()) {
-            context.player().sendOverlayMessage(getMessage(payload.data(), (Sleeper) context.player()));
+        ServerPlayer player = context.player();
+        if (player.getVehicle() instanceof LogEntity log && log.campfire()) {
+            player.sendOverlayMessage(getMessage(payload.data(), (Sleeper) player));
         } else {
-            context.player().sendOverlayMessage(Component.literal("You are not sitting by a campfire"));
+            player.sendOverlayMessage(Component.literal("You are not sitting by a campfire"));
         }
     }
 

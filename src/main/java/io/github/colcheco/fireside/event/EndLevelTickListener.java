@@ -16,10 +16,14 @@ import org.jspecify.annotations.NullMarked;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 @NullMarked
 public class EndLevelTickListener implements ServerTickEvents.EndLevelTick {
+    private static final Map<ServerLevel, Boolean> weatherStatus = new ConcurrentHashMap<>();
+
     @Override
     public void onEndTick(ServerLevel level) {
         List<ServerPlayer> players = level.getPlayers(player -> !player.isSpectator());
@@ -54,7 +58,13 @@ public class EndLevelTickListener implements ServerTickEvents.EndLevelTick {
                         }
                     }
                     if (weatherHaters == players.size() && rules.get(GameRules.ADVANCE_WEATHER) && level.isRaining()) {
-                        target = Sleeper.WakeUpTime.CLEAR_WEATHER;
+                        if (weatherStatus.getOrDefault(level, false)) {
+                            target = Sleeper.WakeUpTime.NOT_SLEEPING;
+                        } else {
+                            target = Sleeper.WakeUpTime.CLEAR_WEATHER;
+                        }
+                    } else {
+                        weatherStatus.put(level, false);
                     }
                     ResourceKey<ClockTimeMarker> marker = target.getMarker();
                     if (marker != null) {
@@ -68,14 +78,16 @@ public class EndLevelTickListener implements ServerTickEvents.EndLevelTick {
                                 }
                             }
                         }
-                        for (ServerPlayer sleeper : players) {
-                            if (((Sleeper) sleeper).sleepingUntil().equals(target)
-                                    && sleeper.getVehicle() instanceof LogEntity log) {
-                                log.kill(level);
-                            }
-                        }
                         if (target.equals(Sleeper.WakeUpTime.CLEAR_WEATHER)) {
                             level.resetWeatherCycle();
+                            weatherStatus.put(level, true);
+                        } else {
+                            for (ServerPlayer sleeper : players) {
+                                if (((Sleeper) sleeper).sleepingUntil().equals(target)
+                                        && sleeper.getVehicle() instanceof LogEntity log) {
+                                    log.kill(level);
+                                }
+                            }
                         }
                         manager.moveToTimeMarker(holder, marker);
                         Fireside.LOGGER.info("Skipped time to {}", target);
