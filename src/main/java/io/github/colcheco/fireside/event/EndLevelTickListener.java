@@ -38,10 +38,15 @@ public class EndLevelTickListener implements ServerTickEvents.EndLevelTick {
                     long timeToSoonest = Long.MAX_VALUE;
                     int weatherHaters = 0;
                     for (ServerPlayer sleeper : players) {
-                        Sleeper.WakeUpTime sleeperTarget = ((Sleeper) sleeper).sleepingUntil();
+                        Sleeper.WakeUpTime sleeperTarget;
                         if (sleeper.isSleepingLongEnough()) {
-                            weatherHaters++;
-                            sleeperTarget = Sleeper.WakeUpTime.MORNING;
+                            if (level.isThundering()) {
+                                sleeperTarget = Sleeper.WakeUpTime.CLEAR_WEATHER;
+                            } else {
+                                sleeperTarget = Sleeper.WakeUpTime.MORNING;
+                            }
+                        } else {
+                            sleeperTarget = ((Sleeper) sleeper).sleepingUntil();
                         }
                         if (sleeperTarget.equals(Sleeper.WakeUpTime.NOT_SLEEPING)) {
                             target = sleeperTarget;
