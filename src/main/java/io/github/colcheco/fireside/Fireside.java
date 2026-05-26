@@ -22,7 +22,7 @@ public class Fireside implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        LOGGER.info("Initializing " + MOD_ID);
+        LOGGER.info("Initializing {}", MOD_ID);
         Registry.register(BuiltInRegistries.ENTITY_TYPE, LogEntity.KEY, LogEntity.TYPE);
         PayloadTypeRegistry.serverboundPlay().register(FiresidePayloadC2S.TYPE, FiresidePayloadC2S.STREAM_CODEC);
         ServerPlayNetworking.registerGlobalReceiver(FiresidePayloadC2S.TYPE, FiresidePayloadC2S::handle);

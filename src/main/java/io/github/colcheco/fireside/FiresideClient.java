@@ -17,10 +17,8 @@ import org.jspecify.annotations.NullMarked;
 public class FiresideClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        Fireside.LOGGER.info("Initializing client for " + Fireside.MOD_ID);
+        Fireside.LOGGER.info("Initializing client for {}", Fireside.MOD_ID);
         EntityRenderers.register(LogEntity.TYPE, LogEntityRenderer::new);
-        KeyMappingHelper.registerKeyMapping(ModKeyMappings.SELECT);
-        KeyMappingHelper.registerKeyMapping(ModKeyMappings.SUBMIT);
         ClientTickEvents.END_CLIENT_TICK.register(new EndClientTickListener());
     }
 }

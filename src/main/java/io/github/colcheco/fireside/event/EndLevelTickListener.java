@@ -44,6 +44,7 @@ public class EndLevelTickListener implements ServerTickEvents.EndLevelTick {
                                 sleeperTarget = Sleeper.WakeUpTime.CLEAR_WEATHER;
                             } else {
                                 sleeperTarget = Sleeper.WakeUpTime.MORNING;
+                                weatherHaters++;
                             }
                         } else {
                             sleeperTarget = ((Sleeper) sleeper).sleepingUntil();

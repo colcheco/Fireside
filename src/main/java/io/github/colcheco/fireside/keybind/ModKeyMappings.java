@@ -3,6 +3,7 @@ package io.github.colcheco.fireside.keybind;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -50,7 +51,7 @@ public class ModKeyMappings {
     }
 
     private static KeyMapping register(String name, int key) {
-        return new KeyMapping("key.fireside." + name,
-                InputConstants.Type.KEYSYM, key, KeyMapping.Category.GAMEPLAY);
+        return KeyMappingHelper.registerKeyMapping(new KeyMapping("key.fireside." + name,
+                InputConstants.Type.KEYSYM, key, KeyMapping.Category.GAMEPLAY));
     }
 }
