@@ -3,12 +3,10 @@ package io.github.colcheco.fireside;
 import io.github.colcheco.fireside.entity.LogEntity;
 import io.github.colcheco.fireside.entity.LogEntityRenderer;
 import io.github.colcheco.fireside.event.EndClientTickListener;
-import io.github.colcheco.fireside.keybind.ModKeyMappings;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import org.jspecify.annotations.NullMarked;
 
