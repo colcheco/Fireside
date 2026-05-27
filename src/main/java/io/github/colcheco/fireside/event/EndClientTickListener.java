@@ -10,8 +10,13 @@ import org.jspecify.annotations.NullMarked;
 @NullMarked
 @Environment(EnvType.CLIENT)
 public class EndClientTickListener implements ClientTickEvents.EndTick {
-    private boolean selectPressed = ModKeyMappings.SELECT.isDown();
-    private boolean submitPressed = ModKeyMappings.SUBMIT.isDown();
+    private boolean selectPressed;
+    private boolean submitPressed;
+
+    public EndClientTickListener() {
+        selectPressed = ModKeyMappings.SELECT.isDown();
+        submitPressed = ModKeyMappings.SUBMIT.isDown();
+    }
 
     @Override
     public void onEndTick(Minecraft client) {
