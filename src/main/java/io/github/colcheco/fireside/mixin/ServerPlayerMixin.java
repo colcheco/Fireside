@@ -50,8 +50,10 @@ public abstract class ServerPlayerMixin extends Player {
             if (!(this.getVehicle() instanceof LogEntity log && log.campfire())) {
                 this.wakeUpTime = Sleeper.WakeUpTime.NOT_SLEEPING;
             } else if (this.level() instanceof ServerLevel level) {
-                if (this.wakeUpTime.equals(Sleeper.WakeUpTime.CLEAR_WEATHER) && !level.isRaining()) {
-                    log.kill(level);
+                if (this.wakeUpTime.equals(Sleeper.WakeUpTime.CLEAR_WEATHER)) {
+                    if (!level.isRaining()) {
+                        log.kill(level);
+                    }
                 } else {
                     Optional<Holder<WorldClock>> clock = level.dimensionType().defaultClock();
                     if (clock.isPresent() && level.clockManager().isAtTimeMarker(clock.get(), marker)) {
