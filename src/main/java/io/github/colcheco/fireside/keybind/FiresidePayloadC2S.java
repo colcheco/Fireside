@@ -34,15 +34,8 @@ public record FiresidePayloadC2S(byte data) implements CustomPacketPayload {
         }
     }
 
-    private static Component getMessage(byte data, Sleeper sleeper) {
-        Sleeper.WakeUpTime target = switch (data) {
-            case 1 -> Sleeper.WakeUpTime.MIDNIGHT;
-            case 2 -> Sleeper.WakeUpTime.MORNING;
-            case 3 -> Sleeper.WakeUpTime.NOON;
-            case 4 -> Sleeper.WakeUpTime.NIGHT;
-            case 5 -> Sleeper.WakeUpTime.CLEAR_WEATHER;
-            default -> Sleeper.WakeUpTime.NOT_SLEEPING;
-        };
+    private static Component getMessage(byte selection, Sleeper sleeper) {
+        Sleeper.WakeUpTime target = Sleeper.WakeUpTime.values()[selection];
         sleeper.setSleeping(target);
         if (target.equals(Sleeper.WakeUpTime.NOT_SLEEPING)) {
             return Component.literal("Please make a selection and try again");

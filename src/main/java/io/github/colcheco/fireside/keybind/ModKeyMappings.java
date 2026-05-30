@@ -44,7 +44,7 @@ public class ModKeyMappings {
                 case 3 -> "noon";
                 case 4 -> "night";
                 case 5 -> "clear weather";
-                default -> "invalid";
+                default -> throw new IndexOutOfBoundsException();
             };
         }
         return Component.literal(message);
