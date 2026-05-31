@@ -43,7 +43,7 @@ public class UseItemOnListener implements BlockEvents.UseItemOnCallback {
                     } else {
                         entity = logs.getFirst();
                     }
-                    if (entity != null && entity.getFirstPassenger() == null) {
+                    if (entity != null && !entity.isVehicle()) {
                         player.startRiding(entity);
                     }
                 }

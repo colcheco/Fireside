@@ -29,7 +29,9 @@ public class EndLevelTickListener implements ServerTickEvents.EndLevelTick {
         List<ServerPlayer> players = level.getPlayers(player -> !player.isSpectator());
         if (!players.isEmpty()) {
             GameRules rules = level.getGameRules();
-            if (!level.sleepStatus.areEnoughDeepSleeping(rules.get(GameRules.PLAYERS_SLEEPING_PERCENTAGE), players)) {
+            if (level.sleepStatus.areEnoughDeepSleeping(rules.get(GameRules.PLAYERS_SLEEPING_PERCENTAGE), players)) {
+                processing.put(level, true);
+            } else {
                 Optional<Holder<WorldClock>> clock = level.dimensionType().defaultClock();
                 if (rules.get(GameRules.ADVANCE_TIME) && clock.isPresent()) {
                     Holder<WorldClock> holder = clock.get();
