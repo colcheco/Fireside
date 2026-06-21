@@ -77,17 +77,7 @@ public class EndLevelTickListener implements ServerTickEvents.EndLevelTick {
                         target = Sleeper.WakeUpTime.NOT_SLEEPING;
                     }
                     ResourceKey<ClockTimeMarker> marker = target.getMarker();
-                    if (marker != null) {
-                        processing.put(level, true);
-                        Collections.shuffle(players);
-                        for (ServerPlayer sleeper : players) {
-                            if (sleeper.getVehicle() instanceof LogEntity log) {
-                                log.tickCampfires();
-                                if (!log.campfire()) {
-                                    return;
-                                }
-                            }
-                        }
+                    if (marker != null && tickAllCampfires(players)) {
                         if (target.equals(Sleeper.WakeUpTime.CLEAR_WEATHER)) {
                             level.resetWeatherCycle();
                         } else {
@@ -109,22 +99,26 @@ public class EndLevelTickListener implements ServerTickEvents.EndLevelTick {
                             return;
                         }
                     }
-                    if (!processing.getOrDefault(level, false)) {
-                        processing.put(level, true);
-                        Collections.shuffle(players);
-                        for (ServerPlayer sleeper : players) {
-                            if (sleeper.getVehicle() instanceof LogEntity log) {
-                                log.tickCampfires();
-                                if (!log.campfire()) {
-                                    return;
-                                }
-                            }
-                        }
+                    if (!processing.getOrDefault(level, false) && tickAllCampfires(players)) {
                         level.resetWeatherCycle();
-                        Fireside.LOGGER.info("Cleared weather");
+                        Fireside.LOGGER.info("Skipped to clear weather");
                     }
                 }
             }
         }
+    }
+
+    private static boolean tickAllCampfires(List<ServerPlayer> players) {
+        processing.put(players.getFirst().level(), true);
+        Collections.shuffle(players);
+        for (ServerPlayer sleeper : players) {
+            if (sleeper.getVehicle() instanceof LogEntity log) {
+                log.tickCampfires();
+                if (!log.campfire()) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }
