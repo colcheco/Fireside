@@ -12,22 +12,21 @@ public interface Sleeper {
     void setSleeping(WakeUpTime time);
 
     enum WakeUpTime {
-        NOT_SLEEPING(ClockTimeMarkers.ROLL_VILLAGE_SIEGE),
+        NOT_SLEEPING(null),
         MIDNIGHT(ClockTimeMarkers.MIDNIGHT),
         MORNING(ClockTimeMarkers.WAKE_UP_FROM_SLEEP),
         NOON(ClockTimeMarkers.NOON),
         NIGHT(ClockTimeMarkers.NIGHT),
         CLEAR_WEATHER(ClockTimeMarkers.DAY);
 
-        private final ResourceKey<ClockTimeMarker> marker;
+        private final @Nullable ResourceKey<ClockTimeMarker> marker;
 
-        WakeUpTime(ResourceKey<ClockTimeMarker> sleepingUntil) {
+        WakeUpTime(@Nullable ResourceKey<ClockTimeMarker> sleepingUntil) {
             marker = sleepingUntil;
         }
 
-        @Nullable
-        public ResourceKey<ClockTimeMarker> getMarker() {
-            return marker.equals(ClockTimeMarkers.ROLL_VILLAGE_SIEGE) ? null : marker;
+        public @Nullable ResourceKey<ClockTimeMarker> getMarker() {
+            return marker;
         }
     }
 }

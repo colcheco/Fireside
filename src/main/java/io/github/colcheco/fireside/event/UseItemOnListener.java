@@ -22,8 +22,7 @@ import java.util.List;
 @NullMarked
 public class UseItemOnListener implements BlockEvents.UseItemOnCallback {
     @Override
-    @Nullable
-    public InteractionResult useItemOn(
+    public @Nullable InteractionResult useItemOn(
             ItemStack itemStack,
             BlockState blockState,
             Level level,

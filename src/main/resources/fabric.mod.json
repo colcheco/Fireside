@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "fireside",
-  "version": "1.2.8+26.1.2",
+  "version": "1.3.1+26.2",
   "name": "Fireside",
   "description": "Helps you skip time",
   "authors": [
@@ -24,8 +24,8 @@
   ],
   "accessWidener": "fireside.classtweaker",
   "depends": {
-    "fabricloader": ">=0.19.2",
+    "fabricloader": ">=0.19.3",
     "fabric-api": "*",
-    "minecraft": "26.1.2"
+    "minecraft": "26.2"
   }
 }

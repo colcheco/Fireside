@@ -48,8 +48,7 @@ public class LogEntity extends Entity {
 
     public boolean campfire() {
         for (BlockPos offset : EnchantingTableBlock.BOOKSHELF_OFFSETS) {
-            BlockState block = level().getBlockState(getOnPos().above().offset(offset));
-            if (block.is(BlockTags.CAMPFIRES) && block.getValueOrElse(CampfireBlock.LIT, false)) {
+            if (CampfireBlock.isLitCampfire(level().getBlockState(getOnPos().above().offset(offset)))) {
                 return true;
             }
         }
@@ -61,7 +60,7 @@ public class LogEntity extends Entity {
             for (BlockPos offset : EnchantingTableBlock.BOOKSHELF_OFFSETS) {
                 BlockPos next = getOnPos().above().offset(offset);
                 BlockState block = level.getBlockState(next);
-                if (block.is(BlockTags.CAMPFIRES)) {
+                if (CampfireBlock.isLitCampfire(block)) {
                     block.randomTick(level, next, level.getRandom());
                 }
             }

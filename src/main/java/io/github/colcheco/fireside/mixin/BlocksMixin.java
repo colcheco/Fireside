@@ -1,8 +1,7 @@
 package io.github.colcheco.fireside.mixin;
 
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.Identifier;
-import net.minecraft.resources.ResourceKey;
+import net.minecraft.references.BlockItemId;
+import net.minecraft.references.BlockItemIds;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -19,19 +18,20 @@ import java.util.function.Function;
 @Mixin(Blocks.class)
 public abstract class BlocksMixin {
     @Unique
-    private static final String MIXIN_PATH = "register(Ljava/lang/String;Ljava/util/function/Function;Lnet/minecraft/"
-            + "world/level/block/state/BlockBehaviour$Properties;)Lnet/minecraft/world/level/block/Block;";
+    private static final String MIXIN_PATH = "register(Lnet/minecraft/references/BlockItemId;" +
+            "Ljava/util/function/Function;Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)" +
+            "Lnet/minecraft/world/level/block/Block;";
 
     @Inject(method = MIXIN_PATH, at = @At("HEAD"), cancellable = true)
     private static void OnRegister(
-            final String id,
-            final Function<BlockBehaviour.Properties, Block> factory,
-            final BlockBehaviour.Properties properties,
-            final CallbackInfoReturnable<Block> cir
+            BlockItemId id,
+            Function<BlockBehaviour.Properties, Block> factory,
+            BlockBehaviour.Properties properties,
+            CallbackInfoReturnable<Block> cir
     ) {
-        if (id.equals("campfire")) {
+        if (id.equals(BlockItemIds.CAMPFIRE)) {
             cir.setReturnValue(Blocks.register(
-                    ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace(id)),
+                    id.block(),
                     factory,
                     properties.randomTicks()
             ));

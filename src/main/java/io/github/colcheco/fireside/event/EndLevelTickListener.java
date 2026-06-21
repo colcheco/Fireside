@@ -33,6 +33,7 @@ public class EndLevelTickListener implements ServerTickEvents.EndLevelTick {
                 processing.put(level, true);
             } else {
                 Optional<Holder<WorldClock>> clock = level.dimensionType().defaultClock();
+                boolean rainNap = rules.get(GameRules.ADVANCE_WEATHER) && level.isRaining();
                 if (rules.get(GameRules.ADVANCE_TIME) && clock.isPresent()) {
                     Holder<WorldClock> holder = clock.get();
                     ServerClockManager manager = level.clockManager();
@@ -66,7 +67,7 @@ public class EndLevelTickListener implements ServerTickEvents.EndLevelTick {
                             timeToSoonest = distance;
                         }
                     }
-                    if (weatherHaters == players.size() && rules.get(GameRules.ADVANCE_WEATHER) && level.isRaining()) {
+                    if (rainNap && weatherHaters == players.size()) {
                         target = Sleeper.WakeUpTime.CLEAR_WEATHER;
                     }
                     if (target.equals(Sleeper.WakeUpTime.NOT_SLEEPING)) {
@@ -99,6 +100,28 @@ public class EndLevelTickListener implements ServerTickEvents.EndLevelTick {
                         }
                         manager.moveToTimeMarker(holder, marker);
                         Fireside.LOGGER.info("Skipped time to {}", target);
+                    }
+                } else if (rainNap) {
+                    for (ServerPlayer sleeper : players) {
+                        if (!(((Sleeper) sleeper).sleepingUntil().equals(Sleeper.WakeUpTime.CLEAR_WEATHER)
+                                || sleeper.isSleepingLongEnough())) {
+                            processing.put(level, false);
+                            return;
+                        }
+                    }
+                    if (!processing.getOrDefault(level, false)) {
+                        processing.put(level, true);
+                        Collections.shuffle(players);
+                        for (ServerPlayer sleeper : players) {
+                            if (sleeper.getVehicle() instanceof LogEntity log) {
+                                log.tickCampfires();
+                                if (!log.campfire()) {
+                                    return;
+                                }
+                            }
+                        }
+                        level.resetWeatherCycle();
+                        Fireside.LOGGER.info("Cleared weather");
                     }
                 }
             }
